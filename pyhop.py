@@ -6,6 +6,9 @@ class State:
     def __init__(self, name):
         self.__name__ = name
 
+    def __repr__(self):
+        return ';'.join([f"{self.__name__}.{name} = {val}" for (name, val) in vars(self).items() if name != "__name__"])
+
 
 class Planner:
     def __init__(self, verbose=0):
@@ -42,7 +45,10 @@ class Planner:
         options = [PlanStep([], tasks, state)]
         while len(options) > 0:
             candidate = options.pop()
+            if self.verbose >= 4:
+                input("Enter a key:")
             self.log(2, f"depth {candidate.depth()} tasks {candidate.tasks}")
+            self.log(3, f"plan: {candidate.plan}")
             if candidate.complete():
                 self.log(3, f"depth {candidate.depth()} returns plan {candidate.plan}")
                 self.log(1, f"** result = {candidate.plan}\n")
@@ -78,7 +84,7 @@ class PlanStep:
         options = []
         self.add_operator_options(options, planner)
         self.add_method_options(options, planner)
-        if len(options) > 0:
+        if len(options) == 0:
             planner.log(3, f"depth {self.depth()} returns failure")
         return options
 

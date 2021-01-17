@@ -156,4 +156,5 @@ goal3.clear = {17:True, 15:True, 12:True}
 print_state(goal3)
 print('')
 
-planner.pyhop(state3,[('move_blocks', goal3)], verbose=3)
+big_plan = planner.pyhop(state3,[('move_blocks', goal3)], verbose=3)
+print(big_plan)

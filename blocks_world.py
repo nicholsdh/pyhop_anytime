@@ -100,6 +100,11 @@ def moveb_m(state,goal):
     do so and call move_blocks recursively. Otherwise, no blocks need
     to be moved.
     """
+
+    # Success!!
+    if all((status(b, state, goal) == 'done' for b in all_blocks(state))):
+        return [[]]
+
     for b1 in all_blocks(state):
         s = status(b1,state,goal)
         if s == 'move-to-table':
@@ -119,7 +124,8 @@ def move1(state,b1,dest):
     """
     Generate subtasks to get b1 and put it at dest.
     """
-    return [[('get', b1), ('put', b1,dest)]]
+    if state.pos[b1] != dest:
+        return [[('get', b1), ('put', b1,dest)]]
 
 
 ### methods for "get"
