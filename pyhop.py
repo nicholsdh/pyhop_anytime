@@ -59,40 +59,37 @@ class Planner:
             print(state)
 
     def pyhop(self, state, tasks, verbose=0):
-        self.verbose = verbose
-        self.log(1, f"** pyhop, verbose={self.verbose}: **\n   state = {state.__name__}\n   tasks = {tasks}")
-        options = [PlanStep([], tasks, state)]
-        while len(options) > 0:
-            candidate = options.pop()
-            if self.verbose >= 4:
-                input("Enter a key:")
-            self.log(2, f"depth {candidate.depth()} tasks {candidate.tasks}")
-            self.log(3, f"plan: {candidate.plan}")
-            if candidate.complete():
-                self.log(3, f"depth {candidate.depth()} returns plan {candidate.plan}")
-                self.log(1, f"** result = {candidate.plan}\n")
-                return candidate.plan
-            else:
-                options.extend(candidate.successors(self))
+        for plan in self.pyhop_generator(state, tasks, verbose):
+            return plan
 
     def anyhop(self, state, tasks, max_seconds=None, verbose=0):
         start_time = time.time()
+        plan_times = []
+        for plan in self.pyhop_generator(state, tasks, verbose):
+            elapsed_time = time.time() - start_time
+            plan_times.append((plan, elapsed_time))
+            if max_seconds and elapsed_time > max_seconds:
+                break
+        return plan_times
+
+    def pyhop_generator(self, state, tasks, verbose=0):
         self.verbose = verbose
         self.log(1, f"** anyhop, verbose={self.verbose}: **\n   state = {state.__name__}\n   tasks = {tasks}")
         options = [PlanStep([], tasks, state)]
-        plans = []
-        while len(options) > 0 and (max_seconds is None or time.time() - start_time < max_seconds):
+        shortest_length = None
+        while len(options) > 0:
             candidate = options.pop()
-            if len(plans) == 0 or len(candidate.plan) < len(plans[-1]):
+            if shortest_length is None or len(candidate.plan) < shortest_length:
                 self.log(2, f"depth {candidate.depth()} tasks {candidate.tasks}")
                 self.log(3, f"plan: {candidate.plan}")
                 if candidate.complete():
                     self.log(3, f"depth {candidate.depth()} returns plan {candidate.plan}")
                     self.log(1, f"** result = {candidate.plan}\n")
-                    plans.append((candidate.plan, time.time() - start_time))
+                    shortest_length = len(candidate.plan)
+                    yield candidate.plan
                 else:
                     options.extend(candidate.successors(self))
-        return plans
+
 
     def anyhop_best(self, state, tasks, max_seconds=None, verbose=0):
         plans = self.anyhop(state, tasks, max_seconds, verbose)
