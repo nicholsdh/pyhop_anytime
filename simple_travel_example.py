@@ -5,7 +5,7 @@ This file should work correctly in both Python 2.7 and Python 3.2.
 """
 
 import pyhop
-
+from pyhop import MethodResult
 
 def taxi_rate(dist):
     return 1.5 + 0.5 * dist
@@ -45,12 +45,12 @@ planner.print_operators()
 
 def travel_by_foot(state, a, x, y):
     if state.dist[x][y] <= 2:
-        return [[('walk', a, x, y)]]
+        return MethodResult([('walk', a, x, y)])
 
 
 def travel_by_taxi(state, a, x, y):
     if state.cash[a] >= taxi_rate(state.dist[x][y]):
-        return [[('call_taxi', a, x), ('ride_taxi', a, x, y), ('pay_driver', a)]]
+        return MethodResult([('call_taxi', a, x), ('ride_taxi', a, x, y), ('pay_driver', a)])
 
 
 planner.declare_methods('travel', travel_by_foot, travel_by_taxi)
