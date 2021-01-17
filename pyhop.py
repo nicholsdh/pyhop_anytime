@@ -11,6 +11,24 @@ class State:
         return '\n'.join([f"{self.__name__}.{name} = {val}" for (name, val) in vars(self).items() if name != "__name__"])
 
 
+class MethodResult:
+    def __init__(self, options=None, completed=False):
+        if options and len(options) > 0:
+            self.options = options if type(options[0]) == list else [options]
+        else:
+            self.completed = completed
+            self.options = [[]] if completed else []
+
+    def complete(self):
+        return self.completed
+
+    def failed(self):
+        return len(self.options) == 0 and not self.completed
+
+    def in_progress(self):
+        return not self.complete() and not self.failed()
+
+
 class Planner:
     def __init__(self, verbose=0):
         self.operators = {}
@@ -133,7 +151,7 @@ class PlanStep:
             for method in relevant:
                 subtask_options = method(self.state, *next_task[1:])
                 if subtask_options is not None:
-                    for subtasks in subtask_options:
+                    for subtasks in subtask_options.options:
                         planner.log(3, f"depth {self.depth()} new tasks: {subtasks}")
                         options.append(PlanStep(self.plan, subtasks + self.tasks[1:], self.state))
 
