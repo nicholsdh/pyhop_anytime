@@ -9,18 +9,18 @@ class State:
 
 class Planner:
     def __init__(self, verbose=0):
-        self.opeartors = {}
+        self.operators = {}
         self.methods = {}
         self.verbose = verbose
 
     def declare_operators(self, *op_list):
-        self.opeartors.update({op.__name__:op for op in op_list})
+        self.operators.update({op.__name__:op for op in op_list})
 
     def declare_methods(self, task_name, *method_list):
         self.methods.update({task_name: list(method_list)})
 
     def print_operators(self):
-        print(f'OPERATORS: {", ".join(self.opeartors)}')
+        print(f'OPERATORS: {", ".join(self.operators)}')
 
     def print_methods(self):
         print('{:<14}{}'.format('TASK:','METHODS:'))
@@ -75,23 +75,30 @@ class PlanStep:
 
     def successors(self, planner):
         options = []
-        task1 = self.tasks[0]
-        if task1[0] in planner.opeartors:
-            planner.log(3, f"depth {self.depth()} action {task1}")
-            operator = planner.opeartors[task1[0]]
-            newstate = operator(copy.deepcopy(self.state), *task1[1:])
+        self.add_operator_options(options, planner)
+        self.add_method_options(options, planner)
+        if len(options) > 0:
+            planner.log(3, f"depth {self.depth()} returns failure")
+        return options
+
+    def add_operator_options(self, options, planner):
+        next_task = self.tasks[0]
+        if next_task[0] in planner.operators:
+            planner.log(3, f"depth {self.depth()} action {next_task}")
+            operator = planner.operators[next_task[0]]
+            newstate = operator(copy.deepcopy(self.state), *next_task[1:])
             planner.log_state(3, f"depth {self.depth()} new state:", newstate)
             if newstate:
-                options.append(PlanStep(self.plan + [task1], self.tasks[1:], newstate))
-        if task1[0] in planner.methods:
-            planner.log(3, f"depth {self.depth()} method instance {task1}")
-            relevant = planner.methods[task1[0]]
+                options.append(PlanStep(self.plan + [next_task], self.tasks[1:], newstate))
+
+    def add_method_options(self, options, planner):
+        next_task = self.tasks[0]
+        if next_task[0] in planner.methods:
+            planner.log(3, f"depth {self.depth()} method instance {next_task}")
+            relevant = planner.methods[next_task[0]]
             for method in relevant:
-                subtask_options = method(self.state, *task1[1:])
+                subtask_options = method(self.state, *next_task[1:])
                 if subtask_options is not None:
                     for subtasks in subtask_options:
                         planner.log(3, f"depth {self.depth()} new tasks: {subtasks}")
                         options.append(PlanStep(self.plan, subtasks + self.tasks[1:], self.state))
-        if len(options) > 0:
-            planner.log(3, f"depth {self.depth()} returns failure")
-        return options
