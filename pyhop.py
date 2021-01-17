@@ -1,5 +1,6 @@
 import copy
 import sys
+import time
 
 
 class State:
@@ -7,7 +8,7 @@ class State:
         self.__name__ = name
 
     def __repr__(self):
-        return ';'.join([f"{self.__name__}.{name} = {val}" for (name, val) in vars(self).items() if name != "__name__"])
+        return '\n'.join([f"{self.__name__}.{name} = {val}" for (name, val) in vars(self).items() if name != "__name__"])
 
 
 class Planner:
@@ -56,6 +57,32 @@ class Planner:
             else:
                 options.extend(candidate.successors(self))
 
+    def anyhop(self, state, tasks, max_seconds=None, verbose=0):
+        start_time = time.time()
+        self.verbose = verbose
+        self.log(1, f"** anyhop, verbose={self.verbose}: **\n   state = {state.__name__}\n   tasks = {tasks}")
+        options = [PlanStep([], tasks, state)]
+        plans = []
+        while len(options) > 0 and (max_seconds is None or time.time() - start_time < max_seconds):
+            candidate = options.pop()
+            if len(plans) == 0 or len(candidate.plan) < len(plans[-1]):
+                self.log(2, f"depth {candidate.depth()} tasks {candidate.tasks}")
+                self.log(3, f"plan: {candidate.plan}")
+                if candidate.complete():
+                    self.log(3, f"depth {candidate.depth()} returns plan {candidate.plan}")
+                    self.log(1, f"** result = {candidate.plan}\n")
+                    plans.append((candidate.plan, time.time() - start_time))
+                else:
+                    options.extend(candidate.successors(self))
+        return plans
+
+    def anyhop_best(self, state, tasks, max_seconds=None, verbose=0):
+        plans = self.anyhop(state, tasks, max_seconds, verbose)
+        return plans[-1][0]
+
+    def anyhop_stats(self, state, tasks, max_seconds=None, verbose=0):
+        plans = self.anyhop(state, tasks, max_seconds, verbose)
+        return [(len(plan), time) for (plan, time) in plans]
 
 def print_state(state, indent=4):
     if state is not None:

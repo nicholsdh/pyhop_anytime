@@ -158,3 +158,6 @@ print('')
 
 big_plan = planner.pyhop(state3,[('move_blocks', goal3)], verbose=3)
 print(big_plan)
+
+big_plan_stats = planner.anyhop_stats(state3, [('move_blocks', goal3)])
+print(big_plan_stats)
