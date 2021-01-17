@@ -70,17 +70,14 @@ Call planner.pyhop(state1,[('travel','me','home','park')]) with different verbos
 """)
 
 print("- If verbose=0 (the default), Pyhop returns the solution but prints nothing.\n")
-planner.anyhop(state1, [('travel', 'me', 'home', 'park')])
+planner.pyhop(state1, [('travel', 'me', 'home', 'park')])
 
 print('- If verbose=1, Pyhop prints the problem and solution, and returns the solution:')
-planner.verbose = 1
-planner.anyhop(state1, [('travel', 'me', 'home', 'park')])
+planner.pyhop(state1, [('travel', 'me', 'home', 'park')], 1)
 
 print('- If verbose=2, Pyhop also prints a note at each recursive call:')
-planner.verbose = 2
-planner.anyhop(state1, [('travel', 'me', 'home', 'park')])
+planner.pyhop(state1, [('travel', 'me', 'home', 'park')], 2)
 
 print('- If verbose=3, Pyhop also prints the intermediate states:')
-planner.verbose = 3
-planner.anyhop(state1, [('travel', 'me', 'home', 'park')])
+planner.pyhop(state1, [('travel', 'me', 'home', 'park')], 3)
 
