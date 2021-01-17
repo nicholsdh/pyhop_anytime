@@ -90,7 +90,6 @@ class Planner:
                 else:
                     options.extend(candidate.successors(self))
 
-
     def anyhop_best(self, state, tasks, max_seconds=None, verbose=0):
         plans = self.anyhop(state, tasks, max_seconds, verbose)
         return plans[-1][0]
