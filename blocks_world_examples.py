@@ -3,6 +3,7 @@ Blocks-world test data for Pyhop 1.1.
 Author: Dana Nau <nau@cs.umd.edu>, November 15, 2012
 This file should work correctly in both Python 2.7 and Python 3.2.
 """
+import unittest
 
 from pyhop import *
 
@@ -23,7 +24,7 @@ First, test pyhop on some of the operators and smaller tasks
 ****************************************
 """)
 
-print("- Define state1: a on b, b on tale, c on table")
+print("- Define state1: a on b, b on table, c on table")
 
 """
 A state is a collection of all of the state variables and their values. Every state variable in the domain should have a value.
@@ -161,3 +162,14 @@ print(big_plan)
 
 big_plan_stats = planner.anyhop_stats(state3, [('move_blocks', goal3)])
 print(big_plan_stats)
+
+
+class Test(unittest.TestCase):
+
+    def test(self):
+        plan = planner.pyhop(state3, [('move_blocks', goal3)])
+        self.assertEqual(plan, [('unstack', 1, 12), ('putdown', 1), ('unstack', 19, 18), ('putdown', 19), ('unstack', 18, 17), ('putdown', 18), ('unstack', 17, 16), ('putdown', 17), ('unstack', 16, 3), ('putdown', 16), ('unstack', 12, 13), ('putdown', 12), ('unstack', 11, 10), ('putdown', 11), ('unstack', 10, 5), ('putdown', 10), ('unstack', 5, 4), ('putdown', 5), ('unstack', 4, 14), ('putdown', 4), ('unstack', 9, 8), ('stack', 9, 4), ('unstack', 8, 7), ('stack', 8, 9), ('pickup', 11), ('stack', 11, 7), ('pickup', 13), ('stack', 13, 8), ('unstack', 14, 15), ('putdown', 14), ('pickup', 15), ('stack', 15, 13), ('pickup', 16), ('stack', 16, 11), ('unstack', 3, 2), ('stack', 3, 16), ('pickup', 2), ('stack', 2, 3), ('pickup', 12), ('stack', 12, 2)])
+
+
+if __name__ == '__main__':
+    unittest.main()

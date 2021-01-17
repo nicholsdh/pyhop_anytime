@@ -3,9 +3,11 @@ The "travel from home to the park" example from my lectures.
 Author: Dana Nau <nau@cs.umd.edu>, May 31, 2013
 This file should work correctly in both Python 2.7 and Python 3.2.
 """
+import unittest
 
 import pyhop
 from pyhop import MethodResult
+
 
 def taxi_rate(dist):
     return 1.5 + 0.5 * dist
@@ -81,3 +83,13 @@ planner.pyhop(state1, [('travel', 'me', 'home', 'park')], 2)
 print('- If verbose=3, Pyhop also prints the intermediate states:')
 planner.pyhop(state1, [('travel', 'me', 'home', 'park')], 3)
 
+
+class Test(unittest.TestCase):
+
+    def test(self):
+        plan = planner.pyhop(state1, [('travel', 'me', 'home', 'park')])
+        self.assertEqual(plan, [('call_taxi', 'me', 'home'), ('ride_taxi', 'me', 'home', 'park'), ('pay_driver', 'me')])
+
+
+if __name__ == '__main__':
+    unittest.main()
