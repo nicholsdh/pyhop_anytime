@@ -56,7 +56,7 @@ class Planner:
     def log_state(self, min_verbose, msg, state):
         if self.verbose >= min_verbose:
             print(msg)
-            print_state(state)
+            print(state)
 
     def pyhop(self, state, tasks, verbose=0):
         self.verbose = verbose
@@ -101,16 +101,6 @@ class Planner:
     def anyhop_stats(self, state, tasks, max_seconds=None, verbose=0):
         plans = self.anyhop(state, tasks, max_seconds, verbose)
         return [(len(plan), time) for (plan, time) in plans]
-
-def print_state(state, indent=4):
-    if state is not None:
-        for (name,val) in vars(state).items():
-            if name != '__name__':
-                for x in range(indent): sys.stdout.write(' ')
-                sys.stdout.write(state.__name__ + '.' + name)
-                print(' =', val)
-    else:
-        print('False')
 
 
 class PlanStep:
