@@ -45,15 +45,15 @@ def setup_state(title, people, connections):
 class Test(unittest.TestCase):
     def test1(self):
         state = setup_state('state',
-                            [('hero', 'mcrey312')],
+                            [('robot', 'mcrey312')],
                             [('mcrey312', 'hallway'), ('mcrey312', 'mcrey314'), ('mcrey314', 'hallway'), ('lounge', 'hallway'), ('copyroom', 'lounge')])
         print(state)
         planner = make_travel_planner()
-        plans = planner.anyhop(state, [('find_route', 'hero', 'mcrey312', 'copyroom')])
+        plans = planner.anyhop(state, [('find_route', 'robot', 'mcrey312', 'copyroom')])
         print(plans)
         plans = [plan for (plan, time) in plans]
-        self.assertEqual(plans, [[('go', 'hero', 'mcrey312', 'mcrey314'), ('go', 'hero', 'mcrey314', 'hallway'), ('go', 'hero', 'hallway', 'lounge'), ('go', 'hero', 'lounge', 'copyroom')], [('go', 'hero', 'mcrey312', 'hallway'), ('go', 'hero', 'hallway', 'lounge'), ('go', 'hero', 'lounge', 'copyroom')]])
-        plan = planner.pyhop(state, [('find_route', 'hero', 'mcrey312', 'no-room')])
+        self.assertEqual(plans, [[('go', 'robot', 'mcrey312', 'mcrey314'), ('go', 'robot', 'mcrey314', 'hallway'), ('go', 'robot', 'hallway', 'lounge'), ('go', 'robot', 'lounge', 'copyroom')], [('go', 'robot', 'mcrey312', 'hallway'), ('go', 'robot', 'hallway', 'lounge'), ('go', 'robot', 'lounge', 'copyroom')]])
+        plan = planner.pyhop(state, [('find_route', 'robot', 'mcrey312', 'no-room')])
         self.assertEqual(plan, None)
 
 

@@ -1,5 +1,8 @@
 """
-This is a variation of the Pyhop planner written by Dana Nau.
+This is a derived work of the Pyhop planner written by Dana Nau.
+
+Alterations are authored by Gabriel Ferrer.
+
 It incorporates the anytime planning algorithm from SHOP3
 (https://github.com/shop-planner/shop3).
 

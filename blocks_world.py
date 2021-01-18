@@ -114,6 +114,8 @@ def moveb_m(state,goal):
 
     #
     # if we get here, no blocks can be moved to their final locations
+    # This solution deviates from the original Pyhop solution by incorporating
+    # nondeterminism.
     return TaskList([[('move_one', b, 'table'), ('move_blocks', goal)]
                      for b in all_blocks(state) if status(b, state, goal) == 'waiting'])
 
