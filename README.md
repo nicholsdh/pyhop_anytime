@@ -45,9 +45,9 @@ state.visited = {'robot': []}
 state.loc = {'robot': 'mcrey312'}
 state.connected = {'mcrey312': ['hallway', 'mcrey314'], 
                    'hallway': ['mcrey312', 'mcrey314', 'lounge'], 
-				   'mcrey314': ['mcrey312', 'hallway'], 
-				   'lounge': ['hallway', 'copyroom'], 
-				   'copyroom': ['lounge']}
+                   'mcrey314': ['mcrey312', 'hallway'], 
+                   'lounge': ['hallway', 'copyroom'], 
+                   'copyroom': ['lounge']}
 ```
 
 In this example, there is only one operator: `go`. The `go` operator moves an entity from one room to 
