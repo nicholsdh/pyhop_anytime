@@ -44,9 +44,9 @@ state = State('3rd-floor')
 state.visited = {'robot': []}
 state.loc = {'robot': 'mcrey312'}
 state.connected = {'mcrey312': ['hallway', 'mcrey314'], 
-                   'hallway': ['mcrey312', 'mcrey314', 'lounge'], 
+                   'hallway':  ['mcrey312', 'mcrey314', 'lounge'], 
                    'mcrey314': ['mcrey312', 'hallway'], 
-                   'lounge': ['hallway', 'copyroom'], 
+                   'lounge':   ['hallway', 'copyroom'], 
                    'copyroom': ['lounge']}
 ```
 
