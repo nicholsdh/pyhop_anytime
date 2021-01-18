@@ -16,7 +16,7 @@ planner created by [Dana Nau](http://www.cs.umd.edu/~nau/). Here are the main mo
   [anytime](https://en.wikipedia.org/wiki/Anytime_algorithm) planning 
   algorithm. The user can specify a maximum time limit, and once that time
   expires it will return the best plan it found. 
-  * The anytime planning algorithm implementation is inspired by the
+  * The anytime planning implementation is inspired by the
     algorithm described for the [SHOP3](https://github.com/shop-planner/shop3) planner.
 * States and goals are consolidated into a single data type. Printing states
   is simplified by the implementation of a `__repr__()` method.  
