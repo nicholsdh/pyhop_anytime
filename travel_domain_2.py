@@ -52,6 +52,9 @@ class Test(unittest.TestCase):
         plan = planner.pyhop(state, [('go_method', 'hero', 'mcrey312', 'copyroom')])
         self.assertEqual(plan, [('go', 'hero', 'mcrey312', 'hallway'), ('go', 'hero', 'hallway', 'lounge'), ('go', 'hero', 'lounge', 'copyroom')])
 
+        plan = planner.pyhop(state, [('go_method', 'hero', 'mcrey312', 'no-room')])
+        self.assertEqual(plan, None)
+
 
 if __name__ == "__main__":
     unittest.main()
