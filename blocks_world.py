@@ -5,7 +5,7 @@ This file should work correctly in both Python 2.7 and Python 3.2.
 """
 
 import pyhop
-from pyhop import MethodResult
+from pyhop import TaskList
 
 """Each Pyhop planning operator is a Python function. The 1st argument is
 the current state, and the others are the planning operator's usual arguments.
@@ -103,19 +103,19 @@ def moveb_m(state,goal):
     """
 
     if all((status(b, state, goal) == 'done' for b in all_blocks(state))):
-        return MethodResult(completed=True)
+        return TaskList(completed=True)
 
     for b1 in all_blocks(state):
         s = status(b1,state,goal)
         if s == 'move-to-table':
-            return MethodResult([('move_one',b1,'table'),('move_blocks',goal)])
+            return TaskList([('move_one', b1, 'table'), ('move_blocks', goal)])
         elif s == 'move-to-block':
-            return MethodResult([('move_one',b1,goal.pos[b1]), ('move_blocks',goal)])
+            return TaskList([('move_one', b1, goal.pos[b1]), ('move_blocks', goal)])
 
     #
     # if we get here, no blocks can be moved to their final locations
-    return MethodResult([[('move_one', b, 'table'), ('move_blocks', goal)]
-                        for b in all_blocks(state) if status(b, state, goal) == 'waiting'])
+    return TaskList([[('move_one', b, 'table'), ('move_blocks', goal)]
+                     for b in all_blocks(state) if status(b, state, goal) == 'waiting'])
 
 
 ### methods for "move_one"
@@ -125,7 +125,7 @@ def move1(state,b1,dest):
     Generate subtasks to get b1 and put it at dest.
     """
     if state.pos[b1] != dest:
-        return MethodResult([('get', b1), ('put', b1,dest)])
+        return TaskList([('get', b1), ('put', b1, dest)])
 
 
 ### methods for "get"
@@ -136,9 +136,9 @@ def get_m(state,b1):
     """
     if state.clear[b1]:
         if state.pos[b1] == 'table':
-            return MethodResult([('pickup',b1)])
+            return TaskList([('pickup', b1)])
         else:
-            return MethodResult([('unstack',b1,state.pos[b1])])
+            return TaskList([('unstack', b1, state.pos[b1])])
 
 
 ### methods for "put"
@@ -150,9 +150,9 @@ def put_m(state,b1,b2):
     """
     if state.holding == b1:
         if b2 == 'table':
-            return MethodResult([('putdown',b1)])
+            return TaskList([('putdown', b1)])
         else:
-            return MethodResult([('stack',b1,b2)])
+            return TaskList([('stack', b1, b2)])
 
 
 def make_blocks_planner():
