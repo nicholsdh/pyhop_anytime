@@ -20,6 +20,9 @@ planner created by [Dana Nau](http://www.cs.umd.edu/~nau/). Here are the main mo
     algorithm described for the [SHOP3](https://github.com/shop-planner/shop3) planner.
 * States and goals are consolidated into a single data type. Printing states
   is simplified by the implementation of a `__repr__()` method.  
+* Depth-first search is implemented using a Python list as a stack rather 
+  than by recursion. This is intended for avoiding stack overflows when 
+  finding long plans.
 
 ## HTN Planning
 
