@@ -40,11 +40,14 @@ class State:
 
 class TaskList:
     def __init__(self, options=None, completed=False):
+        self.completed = completed
         if options and len(options) > 0:
             self.options = options if type(options[0]) == list else [options]
         else:
-            self.completed = completed
             self.options = [[]] if completed else []
+
+    def __repr__(self):
+        return f"TaskList(options={self.options},completed={self.completed})"
 
     def complete(self):
         return self.completed

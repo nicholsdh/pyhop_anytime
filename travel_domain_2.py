@@ -17,7 +17,8 @@ def find_route(state, entity, start, end):
     elif state.connected[start] == end:
         return TaskList([('go', entity, start, end)])
     else:
-        return TaskList([[('go', entity, start, neighbor), ('find_route', entity, neighbor, end)] for neighbor in state.connected[start]])
+        return TaskList([[('go', entity, start, neighbor), ('find_route', entity, neighbor, end)]
+                         for neighbor in state.connected[start]])
 
 
 def make_travel_planner():

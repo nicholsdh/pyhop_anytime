@@ -29,20 +29,20 @@ def pickup(state, b):
         return state
 
 
+def putdown(state, b):
+    if state.pos[b] == 'hand':
+        state.pos[b] = 'table'
+        state.clear[b] = True
+        state.holding = False
+        return state
+
+
 def unstack(state, b, c):
     if state.pos[b] == c and c != 'table' and state.clear[b] == True and state.holding == False:
         state.pos[b] = 'hand'
         state.clear[b] = False
         state.holding = b
         state.clear[c] = True
-        return state
-
-
-def putdown(state, b):
-    if state.pos[b] == 'hand':
-        state.pos[b] = 'table'
-        state.clear[b] = True
-        state.holding = False
         return state
 
 
