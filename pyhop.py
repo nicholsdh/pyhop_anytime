@@ -150,7 +150,7 @@ class PlanStep:
         return options
 
     def add_operator_options(self, options, planner):
-        next_task = self.tasks[0]
+        next_task = self.next_task()
         if next_task[0] in planner.operators:
             planner.log(3, f"depth {self.depth()} action {next_task}")
             operator = planner.operators[next_task[0]]
@@ -160,7 +160,7 @@ class PlanStep:
                 options.append(PlanStep(self.plan + [next_task], self.tasks[1:], newstate))
 
     def add_method_options(self, options, planner):
-        next_task = self.tasks[0]
+        next_task = self.next_task()
         if next_task[0] in planner.methods:
             planner.log(3, f"depth {self.depth()} method instance {next_task}")
             relevant = planner.methods[next_task[0]]
@@ -171,6 +171,12 @@ class PlanStep:
                         planner.log(3, f"depth {self.depth()} new tasks: {subtasks}")
                         options.append(PlanStep(self.plan, subtasks + self.tasks[1:], self.state))
 
+    def next_task(self):
+        result = self.tasks[0]
+        if type(result) is tuple:
+            return result
+        else:
+            return tuple([result])
 
 ############################################################
 # Helper functions that may be useful in domain models
