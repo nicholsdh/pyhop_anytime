@@ -115,8 +115,7 @@ pip3 install git+https://github.com/gjf2a/pyhop_anytime
 ## Full Example
 
 ```
-from pyhop_anytime import pyhop
-from pyhop_anytime.pyhop import TaskList
+from pyhop_anytime import *
 
 
 def go(state, entity, start, end):
