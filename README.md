@@ -83,7 +83,7 @@ def find_route(state, entity, start, end):
 
 Pyhop employs a search strategy known as depth-first search to find a plan. When presented with multiple options, 
 as in the third alternative above, it aggressively makes choices until it has a complete plan. Here is one plan
-that the planner might produce in response to the task ``:
+that the planner might produce in response to the task `[('find_route', 'robot', 'mcrey312', 'copyroom')]`:
 ```
 [('go', 'robot', 'mcrey312', 'mcrey314'), 
  ('go', 'robot', 'mcrey314', 'hallway'), 

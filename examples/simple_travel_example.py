@@ -5,8 +5,8 @@ This file should work correctly in both Python 2.7 and Python 3.2.
 """
 import unittest
 
-import pyhop
-from pyhop import TaskList
+from pyhop_anytime import pyhop
+from pyhop_anytime.pyhop import TaskList
 
 
 def taxi_rate(dist):
