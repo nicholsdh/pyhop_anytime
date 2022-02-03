@@ -161,7 +161,9 @@ state = setup_state('state',
                     [('mcrey312', 'hallway'), ('mcrey312', 'mcrey314'), ('mcrey314', 'hallway'), ('lounge', 'hallway'), ('copyroom', 'lounge')])
 planner = make_travel_planner()
 plans = planner.anyhop(state, [('find_route', 'robot', 'mcrey312', 'copyroom')])
-print(plans)
+for plan, time in plans:
+    print(time)
+    print(plan)
 
 ```
 
