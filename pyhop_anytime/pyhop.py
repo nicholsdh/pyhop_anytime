@@ -90,16 +90,18 @@ class Planner:
 
     def pyhop(self, state, tasks, verbose=0):
         for plan in self.pyhop_generator(state, tasks, verbose):
-            return plan
+            if plan:
+                return plan
 
     def anyhop(self, state, tasks, max_seconds=None, verbose=0):
         start_time = time.time()
         plan_times = []
         for plan in self.pyhop_generator(state, tasks, verbose):
             elapsed_time = time.time() - start_time
-            plan_times.append((plan, elapsed_time))
             if max_seconds and elapsed_time > max_seconds:
                 break
+            if plan:
+                plan_times.append((plan, elapsed_time))
         return plan_times
 
     def pyhop_generator(self, state, tasks, verbose=0):
@@ -119,6 +121,7 @@ class Planner:
                     yield candidate.plan
                 else:
                     options.extend(candidate.successors(self))
+                    yield None
 
     def anyhop_best(self, state, tasks, max_seconds=None, verbose=0):
         plans = self.anyhop(state, tasks, max_seconds, verbose)
