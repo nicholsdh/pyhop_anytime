@@ -93,7 +93,7 @@ class Planner:
             if plan:
                 return plan
 
-    def anyhop(self, state, tasks, max_seconds=None, verbose=0):
+    def anyhop(self, state, tasks, max_seconds=None, verbose=0, time_debug=False):
         start_time = time.time()
         plan_times = []
         for plan in self.pyhop_generator(state, tasks, verbose):
@@ -102,6 +102,8 @@ class Planner:
                 break
             if plan:
                 plan_times.append((plan, elapsed_time))
+            elif time_debug:
+                print(plan, elapsed_time)
         return plan_times
 
     def pyhop_generator(self, state, tasks, verbose=0):
