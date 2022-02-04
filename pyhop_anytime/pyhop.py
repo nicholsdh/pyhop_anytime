@@ -122,6 +122,8 @@ class Planner:
                 else:
                     options.extend(candidate.successors(self))
                     yield None
+            else:
+                yield None
 
     def anyhop_best(self, state, tasks, max_seconds=None, verbose=0):
         plans = self.anyhop(state, tasks, max_seconds, verbose)
