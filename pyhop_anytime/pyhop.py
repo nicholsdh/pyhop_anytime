@@ -103,7 +103,7 @@ class Planner:
             if plan:
                 plan_times.append((plan, elapsed_time))
             elif time_debug:
-                print(plan, elapsed_time)
+                print(plan, elapsed_time, max_seconds, max_seconds and elapsed_time > max_seconds)
         return plan_times
 
     def pyhop_generator(self, state, tasks, verbose=0):
