@@ -89,10 +89,7 @@ def all_blocks(state):
 In each Pyhop planning method, the first argument is the current state (this is analogous to Python methods, in which the first argument is the class instance). The rest of the arguments must match the arguments of the task that the method is for. For example, ('pickup', b1) has a method get_m(state,b1), as shown below.
 """
 
-### methods for "move_blocks"
-
-
-def moveb_m(state,goal):
+def move_blocks(state, goal):
     """
     This method implements the following block-stacking algorithm:
     If there's a block that can be moved to its final position, then
@@ -120,9 +117,7 @@ def moveb_m(state,goal):
                      for b in all_blocks(state) if status(b, state, goal) == 'waiting'])
 
 
-### methods for "move_one"
-
-def move1(state,b1,dest):
+def move_one(state, b1, dest):
     """
     Generate subtasks to get b1 and put it at dest.
     """
@@ -130,9 +125,7 @@ def move1(state,b1,dest):
         return TaskList([('get', b1), ('put', b1, dest)])
 
 
-### methods for "get"
-
-def get_m(state,b1):
+def get(state, b1):
     """
     Generate either a pickup or an unstack subtask for b1.
     """
@@ -143,9 +136,7 @@ def get_m(state,b1):
             return TaskList([('unstack', b1, state.pos[b1])])
 
 
-### methods for "put"
-
-def put_m(state,b1,b2):
+def put(state, b1, b2):
     """
     Generate either a putdown or a stack subtask for b1.
     b2 is b1's destination: either the table or another block.
@@ -167,11 +158,9 @@ def make_blocks_planner():
     blocks_planner.declare_operators(pickup, unstack, putdown, stack)
 
     """
-    declare_methods must be called once for each taskname. Below, 'declare_methods('get',get_m)' tells Pyhop that 'get' has one method, get_m. Notice that 'get' is a quoted string, and get_m is the actual function.
+    Below, 'declare_methods(move_blocks, move_one, get, put)' tells Pyhop
+    what the methods are. Note that the method names are *not* quoted.
     """
+    blocks_planner.declare_methods(move_blocks, move_one, get, put)
 
-    blocks_planner.declare_methods('move_blocks', moveb_m)
-    blocks_planner.declare_methods('move_one', move1)
-    blocks_planner.declare_methods('get',get_m)
-    blocks_planner.declare_methods('put', put_m)
     return blocks_planner

@@ -18,6 +18,8 @@ planner created by [Dana Nau](http://www.cs.umd.edu/~nau/). Here are the main mo
   expires it will return the best plan it found. 
   * The anytime planning implementation is inspired by the
     algorithm described for the [SHOP3](https://github.com/shop-planner/shop3) planner.
+* Methods are declared in the same way as operators, by simply listing the Python functions corresponding to the  
+  methods. Alternative task lists for a given method are then specified by using nondeterministic task options.
 * States and goals are consolidated into a single data type. Printing states
   is simplified by the implementation of a `__repr__()` method.  
 * Depth-first search is implemented using a Python list as a stack rather 
@@ -138,7 +140,7 @@ def find_route(state, entity, start, end):
 def make_travel_planner():
     planner = pyhop.Planner()
     planner.declare_operators(go)
-    planner.declare_methods('find_route', find_route)
+    planner.declare_methods(find_route)
     return planner
 
 

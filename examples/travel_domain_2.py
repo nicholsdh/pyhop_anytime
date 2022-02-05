@@ -24,7 +24,7 @@ def find_route(state, entity, start, end):
 def make_travel_planner():
     planner = pyhop.Planner()
     planner.declare_operators(go)
-    planner.declare_methods('find_route', find_route)
+    planner.declare_methods(find_route)
     return planner
 
 
