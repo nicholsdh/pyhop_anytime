@@ -5,8 +5,8 @@ This file should work correctly in both Python 2.7 and Python 3.2.
 """
 import unittest
 
-import pyhop
-from pyhop import TaskList
+from pyhop_anytime import pyhop
+from pyhop_anytime.pyhop import TaskList
 
 
 def taxi_rate(dist):
@@ -45,6 +45,10 @@ print('')
 planner.print_operators()
 
 
+def travel(state, a, x, y):
+    return TaskList([[('travel_by_foot', a, x, y)], [('travel_by_taxi', a, x, y)]])
+
+
 def travel_by_foot(state, a, x, y):
     if state.dist[x][y] <= 2:
         return TaskList([('walk', a, x, y)])
@@ -55,7 +59,7 @@ def travel_by_taxi(state, a, x, y):
         return TaskList([('call_taxi', a, x), ('ride_taxi', a, x, y), ('pay_driver', a)])
 
 
-planner.declare_methods('travel', travel_by_foot, travel_by_taxi)
+planner.declare_methods(travel, travel_by_foot, travel_by_taxi)
 print('')
 planner.print_methods()
 

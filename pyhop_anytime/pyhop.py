@@ -68,16 +68,14 @@ class Planner:
     def declare_operators(self, *op_list):
         self.operators.update({op.__name__:op for op in op_list})
 
-    def declare_methods(self, task_name, *method_list):
-        self.methods.update({task_name: list(method_list)})
+    def declare_methods(self, *method_list):
+        self.methods.update({method.__name__:method for method in method_list})
 
     def print_operators(self):
         print(f'OPERATORS: {", ".join(self.operators)}')
 
     def print_methods(self):
-        print('{:<14}{}'.format('TASK:','METHODS:'))
-        for task in self.methods:
-            print('{:<14}'.format(task) + ', '.join([f.__name__ for f in self.methods[task]]))
+        print(f'METHODS: {", ".join(self.methods)}')
 
     def log(self, min_verbose, msg):
         if self.verbose >= min_verbose:
@@ -90,26 +88,28 @@ class Planner:
 
     def pyhop(self, state, tasks, verbose=0):
         for plan in self.pyhop_generator(state, tasks, verbose):
-            return plan
+            if plan:
+                return plan
 
-    def anyhop(self, state, tasks, max_seconds=None, verbose=0):
+    def anyhop(self, state, tasks, max_seconds=None, verbose=0, disable_branch_bound=False):
         start_time = time.time()
         plan_times = []
-        for plan in self.pyhop_generator(state, tasks, verbose):
+        for plan in self.pyhop_generator(state, tasks, verbose, disable_branch_bound):
             elapsed_time = time.time() - start_time
-            plan_times.append((plan, elapsed_time))
             if max_seconds and elapsed_time > max_seconds:
                 break
+            if plan:
+                plan_times.append((plan, elapsed_time))
         return plan_times
 
-    def pyhop_generator(self, state, tasks, verbose=0):
+    def pyhop_generator(self, state, tasks, verbose=0, disable_branch_bound=False):
         self.verbose = verbose
         self.log(1, f"** anyhop, verbose={self.verbose}: **\n   state = {state.__name__}\n   tasks = {tasks}")
         options = [PlanStep([], tasks, state)]
         shortest_length = None
         while len(options) > 0:
             candidate = options.pop()
-            if shortest_length is None or len(candidate.plan) < shortest_length:
+            if shortest_length is None or (not disable_branch_bound and len(candidate.plan) < shortest_length):
                 self.log(2, f"depth {candidate.depth()} tasks {candidate.tasks}")
                 self.log(3, f"plan: {candidate.plan}")
                 if candidate.complete():
@@ -119,6 +119,9 @@ class Planner:
                     yield candidate.plan
                 else:
                     options.extend(candidate.successors(self))
+                    yield None
+            else:
+                yield None
 
     def anyhop_best(self, state, tasks, max_seconds=None, verbose=0):
         plans = self.anyhop(state, tasks, max_seconds, verbose)
@@ -165,13 +168,12 @@ class PlanStep:
         next_task = self.next_task()
         if next_task[0] in planner.methods:
             planner.log(3, f"depth {self.depth()} method instance {next_task}")
-            relevant = planner.methods[next_task[0]]
-            for method in relevant:
-                subtask_options = method(self.state, *next_task[1:])
-                if subtask_options is not None:
-                    for subtasks in subtask_options.options:
-                        planner.log(3, f"depth {self.depth()} new tasks: {subtasks}")
-                        options.append(PlanStep(self.plan, subtasks + self.tasks[1:], self.state))
+            method = planner.methods[next_task[0]]
+            subtask_options = method(self.state, *next_task[1:])
+            if subtask_options is not None:
+                for subtasks in subtask_options.options:
+                    planner.log(3, f"depth {self.depth()} new tasks: {subtasks}")
+                    options.append(PlanStep(self.plan, subtasks + self.tasks[1:], self.state))
 
     def next_task(self):
         result = self.tasks[0]

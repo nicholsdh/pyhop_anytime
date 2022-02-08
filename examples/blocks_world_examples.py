@@ -5,7 +5,7 @@ This file should work correctly in both Python 2.7 and Python 3.2.
 """
 import unittest
 
-from pyhop import *
+from pyhop_anytime.pyhop import *
 
 import blocks_world
 planner = blocks_world.make_blocks_planner()

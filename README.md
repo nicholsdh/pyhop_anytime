@@ -18,6 +18,8 @@ planner created by [Dana Nau](http://www.cs.umd.edu/~nau/). Here are the main mo
   expires it will return the best plan it found. 
   * The anytime planning implementation is inspired by the
     algorithm described for the [SHOP3](https://github.com/shop-planner/shop3) planner.
+* Methods are declared in the same way as operators, by simply listing the Python functions corresponding to the  
+  methods. Alternative task lists for a given method are then specified by using nondeterministic task options.
 * States and goals are consolidated into a single data type. Printing states
   is simplified by the implementation of a `__repr__()` method.  
 * Depth-first search is implemented using a Python list as a stack rather 
@@ -83,7 +85,7 @@ def find_route(state, entity, start, end):
 
 Pyhop employs a search strategy known as depth-first search to find a plan. When presented with multiple options, 
 as in the third alternative above, it aggressively makes choices until it has a complete plan. Here is one plan
-that the planner might produce in response to the task ``:
+that the planner might produce in response to the task `[('find_route', 'robot', 'mcrey312', 'copyroom')]`:
 ```
 [('go', 'robot', 'mcrey312', 'mcrey314'), 
  ('go', 'robot', 'mcrey314', 'hallway'), 
@@ -105,6 +107,68 @@ In an anytime planner, a plan is ready to return as soon as the first depth-firs
 planner will backtrack and try alternative plans as long as time is available. The multiple options in the third
 method step above constitute a *nondeterministic choice*. These nondeterministic choices are the alternatives 
 available to the anytime planner.
+
+## Installation
+
+```
+pip3 install git+https://github.com/gjf2a/pyhop_anytime
+```
+
+## Full Example
+
+```
+from pyhop_anytime import *
+
+
+def go(state, entity, start, end):
+    if state.loc[entity] == start and end in state.connected[start] and end not in state.visited[entity]:
+        state.loc[entity] = end
+        state.visited[entity].append(end)
+        return state
+
+
+def find_route(state, entity, start, end):
+    if start == end:
+        return TaskList(completed=True)
+    elif end in state.connected[start]:
+        return TaskList([('go', entity, start, end)])
+    else:
+        return TaskList([[('go', entity, start, neighbor), ('find_route', entity, neighbor, end)]
+                         for neighbor in state.connected[start]])
+
+
+def make_travel_planner():
+    planner = pyhop.Planner()
+    planner.declare_operators(go)
+    planner.declare_methods(find_route)
+    return planner
+
+
+def setup_state(title, people, connections):
+    state = pyhop.State(title)
+    state.visited = {person: [] for (person,location) in people}
+    state.loc = {person: location for (person,location) in people}
+    state.connected = {}
+    for (loc1, loc2) in connections:
+        if loc1 not in state.connected:
+            state.connected[loc1] = []
+        if loc2 not in state.connected:
+            state.connected[loc2] = []
+        state.connected[loc1].append(loc2)
+        state.connected[loc2].append(loc1)
+    return state
+    
+state = setup_state('state',
+                    [('robot', 'mcrey312')],
+                    [('mcrey312', 'hallway'), ('mcrey312', 'mcrey314'), ('mcrey314', 'hallway'), ('lounge', 'hallway'), ('copyroom', 'lounge')])
+planner = make_travel_planner()
+plans = planner.anyhop(state, [('find_route', 'robot', 'mcrey312', 'copyroom')])
+for plan, time in plans:
+    print(time)
+    print(plan)
+
+```
+
 
 ## License
 
