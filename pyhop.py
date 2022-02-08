@@ -151,6 +151,8 @@ class PlanStep:
 
     def add_operator_options(self, options, planner):
         next_task = self.next_task()
+        if type(next_task[0]) == list:
+            print(f"next_task: {next_task}")
         if next_task[0] in planner.operators:
             planner.log(3, f"depth {self.depth()} action {next_task}")
             operator = planner.operators[next_task[0]]
