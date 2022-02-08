@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='pyhop_anytime',
-    version='0.3.4',
+    version='0.3.5',
     description='pyHOP planner modified to be an anytime planner',
     url='https://github.com/gjf2a/pyhop_anytime',
     author='Gabriel Ferrer',

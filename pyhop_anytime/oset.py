@@ -20,6 +20,10 @@ class Oset:
     def add(self, item):
         self.items[item] = None
 
+    def get_first(self):
+        for item in self.items:
+            return item
+
     def discard(self, item):
         if item in self.items:
             del self.items[item]
