@@ -3,7 +3,7 @@ import sys
 
 def anyhop_main(planner):
     if len(sys.argv) == 1:
-        print("Usage: python3 satellite_planner.py -v:[verbosity] -s:[max seconds] [planner_file]+")
+        print(f"Usage: python3 {sys.argv[0]} -v:[verbosity] -s:[max seconds] [planner_file]+")
     else:
         verbosity = 1
         max_seconds = None
