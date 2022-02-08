@@ -13,8 +13,7 @@ def anyhop_main(planner):
             elif filename.startswith("-s"):
                 max_seconds = float(filename.split(':')[1])
             else:
-                exec(f"from {filename} import state_goals")
-                state, goals = state_goals()
+                exec(open(filename).read())
                 plans = planner.anyhop(state, [('start', goals)], max_seconds=max_seconds, verbose=verbosity)
                 for (plan, time) in plans:
                     print(plan)
