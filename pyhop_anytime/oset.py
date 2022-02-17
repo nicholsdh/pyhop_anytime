@@ -17,6 +17,9 @@ class Oset:
     def __contains__(self, item):
         return item in self.items
 
+    def __len__(self):
+        return len(self.items)
+
     def add(self, item):
         self.items[item] = None
 
